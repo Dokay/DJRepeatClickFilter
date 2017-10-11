@@ -60,7 +60,7 @@ NS_INLINE BOOL DJ_addSwizzleMethod(Class aClass, SEL swizzledSelector)
             [UIView dj_repeat_registRunloopObserver];
             DJ_methodSwizzle(UITableView.class, @selector(setDelegate:), @selector(dj_repeat_setDelegate:), YES);
             DJ_methodSwizzle(UICollectionView.class, @selector(setDelegate:), @selector(dj_repeat_setCollectionDelegate:), YES);
-            DJ_methodSwizzle(UIButton.class,@selector(sendAction:to:forEvent:),@selector(dj_repeat_sendAction:to:forEvent:),YES);
+            DJ_methodSwizzle(UIControl.class,@selector(sendAction:to:forEvent:),@selector(dj_repeat_sendAction:to:forEvent:),YES);
             
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wundeclared-selector"
