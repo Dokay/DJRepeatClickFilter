@@ -149,18 +149,40 @@ NS_INLINE BOOL DJ_addSwizzleMethod(Class aClass, SEL swizzledSelector)
     
 }
 
-- (void)hd_updateGestureWithEvent:(UIEvent *)event buttonEvent:(UIEvent *)buttonEvent
+- (void)dj_updateGestureWithEvent:(UIEvent *)event buttonEvent:(UIEvent *)buttonEvent
 {
     UIGestureRecognizer *recognizer = (UIGestureRecognizer *)self;
-    if (([recognizer isMemberOfClass:UITapGestureRecognizer.class] && recognizer.state == UIGestureRecognizerStateEnded)
-        || ([recognizer isMemberOfClass:UIScreenEdgePanGestureRecognizer.class] && recognizer.state == UIGestureRecognizerStateBegan)) {
+    
+    if ([recognizer isMemberOfClass:UITapGestureRecognizer.class] && recognizer.state == UIGestureRecognizerStateEnded){
         if ([UIView dj_repeat_checkSafe]) {
             bCanTap = NO;
-            [self hd_updateGestureWithEvent:event buttonEvent:buttonEvent];
+            [self dj_updateGestureWithEvent:event buttonEvent:buttonEvent];
         }
-    }else{
-        [self hd_updateGestureWithEvent:event buttonEvent:buttonEvent];
+        return;
     }
+    
+    if ([recognizer isMemberOfClass:UIScreenEdgePanGestureRecognizer.class]){
+        //began,要么全过，要么一个都不要过
+        static UIGestureRecognizerState oldState = UIGestureRecognizerStatePossible;
+        static BOOL bLetAllBeganGo = NO;
+        if (recognizer.state != UIGestureRecognizerStateBegan) {
+            oldState = recognizer.state;
+            [self dj_updateGestureWithEvent:event buttonEvent:buttonEvent];
+        }else{
+            if (oldState == UIGestureRecognizerStatePossible) {
+                bLetAllBeganGo = [UIView dj_repeat_checkSafe];//possible 到began 转换的时候检查当前做导航是否安全
+                oldState = UIGestureRecognizerStateBegan;
+            }
+            
+            if (bLetAllBeganGo) {
+                bCanTap = NO;
+                [self dj_updateGestureWithEvent:event buttonEvent:buttonEvent];
+            }
+        }
+        return;
+    }
+    
+    [self dj_updateGestureWithEvent:event buttonEvent:buttonEvent];
 }
 
 //- (void)dj_repeat_sendActionWithGestureRecognizer:(UIGestureRecognizer *)recognizer
