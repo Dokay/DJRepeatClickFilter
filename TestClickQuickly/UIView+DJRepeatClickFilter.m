@@ -12,9 +12,10 @@
 static BOOL bCanTap = NO;
 static NSMutableDictionary *hookTableClassesCache;
 static NSMutableDictionary *hookCollectionClassesCache;
+static NSMutableDictionary *hookGestureSelectorCache;
+static const NSString *DJ_REPEAT_CLICK_GESTURE_PRE = @"DJ_REPEAT_CLICK_GESTURE_PRE";
 
 static DJRepeatClickOtherFilter _otherFilter;
-
 
 NS_INLINE void DJ_methodSwizzle_new(Class originalClass, SEL originalSelector, Class swizzledClass, SEL swizzledSelector, BOOL isInstanceMethod)
 {
@@ -61,27 +62,10 @@ NS_INLINE BOOL DJ_addSwizzleMethod(Class aClass, SEL swizzledSelector)
             DJ_methodSwizzle(UITableView.class, @selector(setDelegate:), @selector(dj_repeat_setDelegate:), YES);
             DJ_methodSwizzle(UICollectionView.class, @selector(setDelegate:), @selector(dj_repeat_setCollectionDelegate:), YES);
             DJ_methodSwizzle(UIControl.class,@selector(sendAction:to:forEvent:),@selector(dj_repeat_sendAction:to:forEvent:),YES);
-            
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wundeclared-selector"
-            if ([NSClassFromString(@"UIGestureRecognizer") instancesRespondToSelector:@selector(_updateGestureWithEvent:buttonEvent:)]) {
-                DJ_methodSwizzle(UIGestureRecognizer.class,@selector(_updateGestureWithEvent:buttonEvent:),@selector(hd_updateGestureWithEvent:buttonEvent:),YES);
-            }
-#pragma clang diagnostic pop
-
+            DJ_methodSwizzle(UIGestureRecognizer.class,@selector(initWithTarget:action:),@selector(dj_initWithTarget:action:),YES);
+            DJ_methodSwizzle(UIGestureRecognizer.class,@selector(addTarget:action:),@selector(dj_addTarget:action:),YES);
         }
     });
-}
-
-- (instancetype)dj_initWithTarget:(NSObject *)target action:(nullable SEL)action
-{
-    DJ_methodSwizzle(target.class,action,@selector(dj_gesture_action:),YES);
-    return [self dj_initWithTarget:target action:action];
-}
-
-- (void)dj_gesture_action:(UITapGestureRecognizer *)recognizer
-{
-    [self dj_gesture_action:recognizer];
 }
 
 + (void)dj_repeat_registRunloopObserver
@@ -111,10 +95,9 @@ NS_INLINE BOOL DJ_addSwizzleMethod(Class aClass, SEL swizzledSelector)
     }else{
         return YES;
     }
-//    return bCanTap && [UIViewController isTransiting] == NO;
-    
 }
 
+#pragma mark - UITableView Hook
 - (void)dj_repeat_setDelegate:(NSObject *)deleagte
 {
     [self dj_repeat_setDelegate:deleagte];
@@ -132,6 +115,30 @@ NS_INLINE BOOL DJ_addSwizzleMethod(Class aClass, SEL swizzledSelector)
     
 }
 
+- (void)dj_repeat_tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if ([NSObject dj_repeat_checkSafe]) {
+        bCanTap = NO;
+        [self dj_repeat_tableView:tableView didSelectRowAtIndexPath:indexPath];
+    }
+}
+
+#pragma mark - UIControl Hook
+- (void)dj_repeat_sendAction:(SEL)action to:(id)target forEvent:(UIEvent *)event
+{
+    if (event == nil) {
+        //UITextInput replaceRange:withText: will call
+        [self dj_repeat_sendAction:action to:target forEvent:event];
+        return;
+    }
+    
+    if ([NSObject dj_repeat_checkSafe]) {
+        bCanTap = NO;
+        [self dj_repeat_sendAction:action to:target forEvent:event];
+    }
+}
+
+#pragma mark - UICollectionView Hook
 - (void)dj_repeat_setCollectionDelegate:(NSObject *)deleagte
 {
     [self dj_repeat_setCollectionDelegate:deleagte];
@@ -149,82 +156,93 @@ NS_INLINE BOOL DJ_addSwizzleMethod(Class aClass, SEL swizzledSelector)
     
 }
 
-- (void)dj_updateGestureWithEvent:(UIEvent *)event buttonEvent:(UIEvent *)buttonEvent
-{
-    UIGestureRecognizer *recognizer = (UIGestureRecognizer *)self;
-    
-    if ([recognizer isMemberOfClass:UITapGestureRecognizer.class] && recognizer.state == UIGestureRecognizerStateEnded){
-        if ([UIView dj_repeat_checkSafe]) {
-            bCanTap = NO;
-            [self dj_updateGestureWithEvent:event buttonEvent:buttonEvent];
-        }
-        return;
-    }
-    
-    if ([recognizer isMemberOfClass:UIScreenEdgePanGestureRecognizer.class]){
-        //began,要么全过，要么一个都不要过
-        static UIGestureRecognizerState oldState = UIGestureRecognizerStatePossible;
-        static BOOL bLetAllBeganGo = NO;
-        if (recognizer.state != UIGestureRecognizerStateBegan) {
-            oldState = recognizer.state;
-            [self dj_updateGestureWithEvent:event buttonEvent:buttonEvent];
-        }else{
-            if (oldState == UIGestureRecognizerStatePossible) {
-                bLetAllBeganGo = [UIView dj_repeat_checkSafe];//possible 到began 转换的时候检查当前做导航是否安全
-                oldState = UIGestureRecognizerStateBegan;
-            }
-            
-            if (bLetAllBeganGo) {
-                bCanTap = NO;
-                [self dj_updateGestureWithEvent:event buttonEvent:buttonEvent];
-            }
-        }
-        return;
-    }
-    
-    [self dj_updateGestureWithEvent:event buttonEvent:buttonEvent];
-}
-
-//- (void)dj_repeat_sendActionWithGestureRecognizer:(UIGestureRecognizer *)recognizer
-//{
-//    if ([recognizer isMemberOfClass:UITapGestureRecognizer.class]
-//        || ([recognizer isMemberOfClass:UIScreenEdgePanGestureRecognizer.class] && recognizer.state == UIGestureRecognizerStateBegan)) {
-//        if ([UIView dj_repeat_checkSafe]) {
-//            bCanTap = NO;
-//            [self dj_repeat_sendActionWithGestureRecognizer:recognizer];
-//        }
-//    }else{
-//        [self dj_repeat_sendActionWithGestureRecognizer:recognizer];
-//    }
-//}
-
-- (void)dj_repeat_sendAction:(SEL)action to:(id)target forEvent:(UIEvent *)event
-{
-    if (event == nil) {
-        //UITextInput replaceRange:withText: will call
-        [self dj_repeat_sendAction:action to:target forEvent:event];
-        return;
-    }
-    
-    if ([UIView dj_repeat_checkSafe]) {
-        bCanTap = NO;
-        [self dj_repeat_sendAction:action to:target forEvent:event];
-    }
-}
-
-- (void)dj_repeat_tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if ([UIView dj_repeat_checkSafe]) {
-        bCanTap = NO;
-        [self dj_repeat_tableView:tableView didSelectRowAtIndexPath:indexPath];
-    }
-}
-
 - (void)dj_repeat_collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ([UIView dj_repeat_checkSafe]) {
+    if ([NSObject dj_repeat_checkSafe]) {
         bCanTap = NO;
         [self dj_repeat_collectionView:collectionView didSelectItemAtIndexPath:indexPath];
+    }
+}
+
+#pragma mark - Gesture Hook
+- (instancetype)dj_initWithTarget:(nullable id)target action:(nullable SEL)action
+{
+    [self dj_hookGestureWithTarget:target action:action];
+    return [self dj_initWithTarget:target action:action];
+}
+
+- (void)dj_addTarget:(id)target action:(SEL)action
+{
+    [self dj_hookGestureWithTarget:target action:action];
+    [self dj_addTarget:target action:action];
+}
+
+- (void)dj_hookGestureWithTarget:(NSObject *)target action:(SEL)action
+{
+    if (!target ||! action) {
+        return;
+    }
+    
+    NSString *selectorKeyWithTargetClass = dj_gesture_selector_name(target,action);
+    
+    if (!hookGestureSelectorCache) {
+        hookGestureSelectorCache = [NSMutableDictionary new];
+    }
+    
+    if ([hookGestureSelectorCache valueForKey:selectorKeyWithTargetClass]) {
+        return;
+    }
+    
+    Method setterMethod = class_getInstanceMethod([target class], action);
+    NSAssert(setterMethod != NULL, @"no selector:",selectorKeyWithTargetClass);
+    
+    BOOL addMethodResult = class_addMethod(target.class, NSSelectorFromString(selectorKeyWithTargetClass), (IMP)dj_gestureInvokeWithParam, method_getTypeEncoding(setterMethod));
+    
+    NSAssert(addMethodResult, @"add method：%@ fail..",selectorKeyWithTargetClass);
+    
+    DJ_methodSwizzle(target.class, action, NSSelectorFromString(selectorKeyWithTargetClass), YES);
+    [hookGestureSelectorCache setObject:@"1" forKey:selectorKeyWithTargetClass];
+}
+
+NS_INLINE NSString * dj_gesture_selector_name(NSObject *target, SEL action)
+{
+    NSString *selectorKeyWithTargetClass = [NSString stringWithFormat:@"%@_%@_%@",DJ_REPEAT_CLICK_GESTURE_PRE,NSStringFromClass(target.class),NSStringFromSelector(action)];
+    return selectorKeyWithTargetClass;
+}
+
+NS_INLINE void dj_gesture_invoke(NSObject *target, SEL action, id newValue)
+{
+    NSString *selectorKeyWithTargetClass = dj_gesture_selector_name(target,action);
+    IMP originalImplementation = class_getMethodImplementation([target class], NSSelectorFromString(selectorKeyWithTargetClass));
+//    NSAssert(originalImplementation != NULL,@"no imp,%@",selectorKeyWithTargetClass);
+    
+    typedef void (*OriginalMethodType)(id,SEL, NSObject*);
+    OriginalMethodType originalMethod = (OriginalMethodType)originalImplementation;
+    originalMethod(target,NSSelectorFromString(selectorKeyWithTargetClass),newValue);
+}
+
+static void dj_gestureInvokeWithParam(NSObject *target, SEL action, id newValue)
+{
+    UITapGestureRecognizer *currentRecognizer = newValue;
+    
+//    //gesture can add multiple target, they have one recognizer instance.
+//    if (lastRecognizer && lastRecognizer.view == currentRecognizer.view) {
+//        CGPoint p1 = [lastRecognizer locationInView:lastRecognizer.view];
+//        CGPoint p2 = [currentRecognizer locationInView:currentRecognizer.view];
+//        if (CGPointEqualToPoint(p1, p2)) {
+//            hd_gesture_invoke(target,action,newValue);
+//            return;
+//        }
+//    }
+    
+    if ([currentRecognizer isMemberOfClass:UITapGestureRecognizer.class]
+        || ([currentRecognizer isMemberOfClass:UIScreenEdgePanGestureRecognizer.class] && currentRecognizer.state == UIGestureRecognizerStateBegan)) {
+        if ([NSObject dj_repeat_checkSafe]) {
+            bCanTap = NO;
+            dj_gesture_invoke(target,action,newValue);
+        }
+    }else{
+        dj_gesture_invoke(target,action,newValue);
     }
 }
 

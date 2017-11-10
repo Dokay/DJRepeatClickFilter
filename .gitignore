@@ -1,0 +1,12 @@
+/Pods/*
+Podfile.lock
+xcuserdata
+.idea/.name
+.idea/eif-ios-app.iml
+.idea/encodings.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
+.idea/workspace.xml
+.idea/xcode.xml
+xcshareddata

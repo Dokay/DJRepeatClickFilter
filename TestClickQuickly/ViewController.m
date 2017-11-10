@@ -29,23 +29,29 @@
     NSLog(@"viewDidLoad ");
     
     UITapGestureRecognizer *tapgesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTouchDo:)];
+    [tapgesture addTarget:self action:@selector(onTouchDoTwo:)];
     [self.view addGestureRecognizer:tapgesture];
     
     
     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(200, 200, 200, 200)];
     view.backgroundColor = [UIColor blueColor];
     [self.view addSubview:view];
-    UITapGestureRecognizer *tapgesture1 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTouchDo1:)];
+    UITapGestureRecognizer *tapgesture1 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTouchWithoutParam)];
     [view addGestureRecognizer:tapgesture1];
     
 }
 
-- (void)onTouchDo:(UIGestureRecognizer *)recog
+- (void)onTouchDoTwo:(UIGestureRecognizer *)recognizer
+{
+    NSLog(@"onTouchDoTwo");
+}
+
+- (void)onTouchDo:(UIGestureRecognizer *)recognizer
 {
     NSLog(@"tap view");
 }
 
-- (void)onTouchDo1:(UIGestureRecognizer *)recog
+- (void)onTouchWithoutParam
 {
     NSLog(@"tap subview");
 }
