@@ -17,6 +17,9 @@ static const NSString *DJ_REPEAT_CLICK_GESTURE_PRE = @"DJ_REPEAT_CLICK_GESTURE_P
 
 static DJRepeatClickOtherFilter _otherFilter;
 
+static NSTimeInterval timeElapse;
+static NSTimeInterval tapProcessingElapse;
+
 NS_INLINE void DJ_methodSwizzle_new(Class originalClass, SEL originalSelector, Class swizzledClass, SEL swizzledSelector, BOOL isInstanceMethod)
 {
     Method (*class_getMethod)(Class, SEL) = &class_getInstanceMethod;
@@ -64,6 +67,7 @@ NS_INLINE BOOL DJ_addSwizzleMethod(Class aClass, SEL swizzledSelector)
             DJ_methodSwizzle(UIControl.class,@selector(sendAction:to:forEvent:),@selector(dj_repeat_sendAction:to:forEvent:),YES);
             DJ_methodSwizzle(UIGestureRecognizer.class,@selector(initWithTarget:action:),@selector(dj_initWithTarget:action:),YES);
             DJ_methodSwizzle(UIGestureRecognizer.class,@selector(addTarget:action:),@selector(dj_addTarget:action:),YES);
+            DJ_methodSwizzle(UIApplication.class,@selector(sendEvent:),@selector(hd_sendEvent:),YES);
         }
     });
 }
@@ -183,7 +187,7 @@ NS_INLINE BOOL DJ_addSwizzleMethod(Class aClass, SEL swizzledSelector)
         return;
     }
     
-    NSString *selectorKeyWithTargetClass = dj_gesture_selector_name(target,action);
+    NSString *selectorKeyWithTargetClass = dj_gesture_selector_name(target.class,action);
     
     if (!hookGestureSelectorCache) {
         hookGestureSelectorCache = [NSMutableDictionary new];
@@ -193,6 +197,22 @@ NS_INLINE BOOL DJ_addSwizzleMethod(Class aClass, SEL swizzledSelector)
         return;
     }
     
+    if (method_getImplementation(class_getInstanceMethod([target class], action)) == (IMP)dj_gestureInvokeWithParam) {
+        Class class = target.superclass;
+        while (class != [NSObject class]) {
+            SEL superClassHDGestureAction = NSSelectorFromString(dj_gesture_selector_name(class,action));
+            if ([target respondsToSelector:superClassHDGestureAction]) {
+                BOOL addOriginMethodResult = class_addMethod(target.class, NSSelectorFromString(selectorKeyWithTargetClass), (IMP)class_getMethodImplementation(target.class, superClassHDGestureAction), method_getTypeEncoding(class_getInstanceMethod([target class], action)));
+                NSAssert(addOriginMethodResult, @"add origin method：%@ fail..",selectorKeyWithTargetClass);
+                [hookGestureSelectorCache setObject:@"1" forKey:selectorKeyWithTargetClass];
+                break;
+            }
+            class = class_getSuperclass(class);
+        }
+        return;
+    }
+    
+    class_addMethod(target.class, action, (IMP)class_getMethodImplementation(target.class, action), method_getTypeEncoding(class_getInstanceMethod([target class], action)));
     Method setterMethod = class_getInstanceMethod([target class], action);
     NSAssert(setterMethod != NULL, @"no selector:",selectorKeyWithTargetClass);
     
@@ -204,15 +224,15 @@ NS_INLINE BOOL DJ_addSwizzleMethod(Class aClass, SEL swizzledSelector)
     [hookGestureSelectorCache setObject:@"1" forKey:selectorKeyWithTargetClass];
 }
 
-NS_INLINE NSString * dj_gesture_selector_name(NSObject *target, SEL action)
+NS_INLINE NSString * dj_gesture_selector_name(Class targetClass, SEL action)
 {
-    NSString *selectorKeyWithTargetClass = [NSString stringWithFormat:@"%@_%@_%@",DJ_REPEAT_CLICK_GESTURE_PRE,NSStringFromClass(target.class),NSStringFromSelector(action)];
+    NSString *selectorKeyWithTargetClass = [NSString stringWithFormat:@"%@_%@_%@",DJ_REPEAT_CLICK_GESTURE_PRE,NSStringFromClass(targetClass),NSStringFromSelector(action)];
     return selectorKeyWithTargetClass;
 }
 
 NS_INLINE void dj_gesture_invoke(NSObject *target, SEL action, id newValue)
 {
-    NSString *selectorKeyWithTargetClass = dj_gesture_selector_name(target,action);
+    NSString *selectorKeyWithTargetClass = dj_gesture_selector_name(target.class,action);
     IMP originalImplementation = class_getMethodImplementation([target class], NSSelectorFromString(selectorKeyWithTargetClass));
 //    NSAssert(originalImplementation != NULL,@"no imp,%@",selectorKeyWithTargetClass);
     
@@ -225,25 +245,30 @@ static void dj_gestureInvokeWithParam(NSObject *target, SEL action, id newValue)
 {
     UITapGestureRecognizer *currentRecognizer = newValue;
     
-//    //gesture can add multiple target, they have one recognizer instance.
-//    if (lastRecognizer && lastRecognizer.view == currentRecognizer.view) {
-//        CGPoint p1 = [lastRecognizer locationInView:lastRecognizer.view];
-//        CGPoint p2 = [currentRecognizer locationInView:currentRecognizer.view];
-//        if (CGPointEqualToPoint(p1, p2)) {
-//            hd_gesture_invoke(target,action,newValue);
-//            return;
-//        }
-//    }
-    
     if ([currentRecognizer isMemberOfClass:UITapGestureRecognizer.class]
         || ([currentRecognizer isMemberOfClass:UIScreenEdgePanGestureRecognizer.class] && currentRecognizer.state == UIGestureRecognizerStateBegan)) {
+        BOOL otherFilterResult = _otherFilter ? _otherFilter() : YES;
         if ([NSObject dj_repeat_checkSafe]) {
             bCanTap = NO;
+            tapProcessingElapse = timeElapse;
+            dj_gesture_invoke(target,action,newValue);
+        }else if(tapProcessingElapse == timeElapse && otherFilterResult){
             dj_gesture_invoke(target,action,newValue);
         }
     }else{
         dj_gesture_invoke(target,action,newValue);
     }
+}
+
+-(void)hd_sendEvent:(UIEvent *)event
+{
+    if (event.type == UIEventTypeTouches) {
+        if (bCanTap == YES) {
+            timeElapse = [NSDate date].timeIntervalSince1970;
+        }
+    }
+    
+    [self hd_sendEvent:event];
 }
 
 
