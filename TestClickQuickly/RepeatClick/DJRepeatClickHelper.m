@@ -9,7 +9,8 @@
 
 #if DJ_REPEAT_CLICK_MACROS == DJ_REPEAT_CLICK_OPEN
 
-static BOOL bCanTap = NO;
+static BOOL _bCanTap = NO;
+static BOOL _isFilterOpen = YES;
 static DJRepeatClickOtherFilterBlock _otherRepeatClickFilter;
 
 @implementation DJRepeatClickHelper
@@ -18,24 +19,36 @@ static DJRepeatClickOtherFilterBlock _otherRepeatClickFilter;
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        if (dj_repeat_click_filter_enable) {
+        if (_isFilterOpen) {
             [DJRepeatClickHelper repeatClickRegistRunloopObserver];
         }
     });
 }
 
++ (BOOL)isFilterOpen
+{
+    NSAssert([NSThread isMainThread],@"must be main thread");
+    return _isFilterOpen;
+}
+
++ (void)setFilterOpen:(BOOL)isFilterOpen
+{
+    NSAssert([NSThread isMainThread],@"must be main thread");
+    _isFilterOpen = isFilterOpen;
+}
+
 + (void)setTapDisable
 {
     NSAssert([NSThread isMainThread],@"must be main thread");
-    bCanTap = NO;
+    _bCanTap = NO;
 }
 
 + (BOOL)tapEnable
 {
     NSAssert([NSThread isMainThread], @"must be main thread");
-    if (dj_repeat_click_filter_enable) {
+    if (_isFilterOpen) {
         BOOL otherFilterResult = _otherRepeatClickFilter ? _otherRepeatClickFilter() : YES;
-        return bCanTap && otherFilterResult;
+        return _bCanTap && otherFilterResult;
     }else{
         return YES;
     }
@@ -60,7 +73,7 @@ static DJRepeatClickOtherFilterBlock _otherRepeatClickFilter;
     CFStringRef runLoopMode = kCFRunLoopCommonModes;
     
     void (^runLoopObserverCallback)(CFRunLoopObserverRef runLoopObserver, CFRunLoopActivity activity) = ^(CFRunLoopObserverRef runLoopObserver, CFRunLoopActivity activity){
-        bCanTap = YES;
+        _bCanTap = YES;
     };
     
     CFRunLoopObserverRef observer = CFRunLoopObserverCreateWithHandler(kCFAllocatorDefault,

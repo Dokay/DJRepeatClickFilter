@@ -17,9 +17,11 @@
 #if DJ_REPEAT_CLICK_MACROS == DJ_REPEAT_CLICK_OPEN
 
 typedef BOOL (^DJRepeatClickOtherFilterBlock)();
-__attribute__((weak)) BOOL dj_repeat_click_filter_enable = YES;
 
 @interface DJRepeatClickHelper : NSObject
+
++ (BOOL)isFilterOpen;
++ (void)setFilterOpen:(BOOL)isFilterOpen;
 
 /**
  设置当前Runloop 点击无效，当前Runloop结束时开关会自动放开，可多次重复调用

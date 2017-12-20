@@ -24,7 +24,7 @@ static const NSString *DJ_REPEAT_CLICK_GESTURE_FORK_PRE = @"DJ_REPEAT_CLICK_GEST
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        if (dj_repeat_click_filter_enable) {
+        if ([DJRepeatClickHelper isFilterOpen]) {
             DJ_methodSwizzle(UIGestureRecognizer.class,@selector(initWithTarget:action:),@selector(dj_repeatClickInitWithTarget:action:),YES);
             DJ_methodSwizzle(UIGestureRecognizer.class,@selector(addTarget:action:),@selector(dj_repeatClickAddTarget:action:),YES);
         }

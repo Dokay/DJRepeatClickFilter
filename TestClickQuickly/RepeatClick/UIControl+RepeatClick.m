@@ -20,7 +20,7 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        if (dj_repeat_click_filter_enable) {
+        if ([DJRepeatClickHelper isFilterOpen]) {
             DJ_methodSwizzle(UIControl.class,@selector(sendAction:to:forEvent:),@selector(dj_repeatClickSendAction:to:forEvent:),YES);
         }
     });

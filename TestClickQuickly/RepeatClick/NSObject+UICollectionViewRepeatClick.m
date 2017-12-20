@@ -21,7 +21,7 @@ static NSMutableDictionary *hookCollectionClassesCache;
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        if (dj_repeat_click_filter_enable) {
+        if ([DJRepeatClickHelper isFilterOpen]) {
             DJ_methodSwizzle(UICollectionView.class, @selector(setDelegate:), @selector(dj_repeatClickSetCollectionDelegate:), YES);
         }
     });

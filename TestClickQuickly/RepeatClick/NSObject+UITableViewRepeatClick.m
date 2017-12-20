@@ -20,7 +20,7 @@ static NSMutableDictionary *hookTableClassesCache;
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        if (dj_repeat_click_filter_enable) {
+        if ([DJRepeatClickHelper isFilterOpen]) {
             DJ_methodSwizzle(UITableView.class, @selector(setDelegate:), @selector(dj_repeatClickSetDelegate:), YES);
         }
     });
