@@ -28,8 +28,8 @@
     
     NSLog(@"viewDidLoad ");
     
-    UITapGestureRecognizer *tapgesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTouchDo:)];
-    [tapgesture addTarget:self action:@selector(onTouchDoTwo:)];
+    UITapGestureRecognizer *tapgesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTouchDo)];
+//    [tapgesture addTarget:self action:@selector(onTouchDoTwo:)];
     [self.view addGestureRecognizer:tapgesture];
     
     
@@ -46,7 +46,7 @@
     NSLog(@"onTouchDoTwo");
 }
 
-- (void)onTouchDo:(UIGestureRecognizer *)recognizer
+- (void)onTouchDo
 {
     NSLog(@"tap view");
 }

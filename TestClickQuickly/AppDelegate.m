@@ -8,7 +8,7 @@
 
 #import "AppDelegate.h"
 #import "ViewController.h"
-#import "UIView+DJRepeatClickFilter.h"
+#import "DJRepeatClickHelper.h"
 
 //BOOL DJRepeatClickFilterEnable = YES;
 
@@ -28,13 +28,13 @@
     self.window.rootViewController = nav;
     [self.window makeKeyAndVisible];
     
-    [UIView setOtherFilter:^BOOL{
-       //other conditions you want to filter
+    [DJRepeatClickHelper setOtherFilter:^BOOL{
+        //other conditions you want to filter
         return YES;
     }];
     
     //Do Test
-    [AppDelegate hd_repeat_registRunloopObserver];
+    [AppDelegate dj_repeat_registRunloopObserver];
     
     return YES;
 }
@@ -49,13 +49,13 @@
     NSLog(@"didShowViewController");
 }
 
-+ (void)hd_repeat_registRunloopObserver
++ (void)dj_repeat_registRunloopObserver
 {
     CFRunLoopRef runLoop = CFRunLoopGetCurrent();
     CFStringRef runLoopMode = kCFRunLoopCommonModes;
     
     void (^runLoopObserverCallback)(CFRunLoopObserverRef runLoopObserver, CFRunLoopActivity activity) = ^(CFRunLoopObserverRef runLoopObserver, CFRunLoopActivity activity){
-        NSLog(@"activity:%ld",activity);
+//        NSLog(@"activity:%ld",activity);
     };
     
     CFRunLoopObserverRef observer = CFRunLoopObserverCreateWithHandler(kCFAllocatorDefault,
