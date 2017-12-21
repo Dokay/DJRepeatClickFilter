@@ -12,7 +12,7 @@
 
 #if DJ_REPEAT_CLICK_MACROS == DJ_REPEAT_CLICK_OPEN
 
-static NSMutableDictionary *hookTableClassesCache;
+static NSMutableDictionary *_hookTableClassesCache;
 
 @implementation NSObject (UITableViewRepeatClick)
 
@@ -31,15 +31,15 @@ static NSMutableDictionary *hookTableClassesCache;
 {
     [self dj_repeatClickSetDelegate:deleagte];
     
-    if (hookTableClassesCache == nil) {
-        hookTableClassesCache = [NSMutableDictionary new];
+    if (_hookTableClassesCache == nil) {
+        _hookTableClassesCache = [NSMutableDictionary new];
     }
-    if (deleagte != nil && [hookTableClassesCache objectForKey:NSStringFromClass(deleagte.class)] == nil) {
+    if (deleagte != nil && [_hookTableClassesCache objectForKey:NSStringFromClass(deleagte.class)] == nil) {
         BOOL addMethodResult = DJ_addSwizzleMethod(deleagte.class,@selector(dj_repeat_tableView:didSelectRowAtIndexPath:));
         NSAssert(addMethodResult, @"add method fail..");
         
         DJ_methodSwizzle(deleagte.class, @selector(tableView:didSelectRowAtIndexPath:), @selector(dj_repeat_tableView:didSelectRowAtIndexPath:), YES);
-        [hookTableClassesCache setObject:@"1" forKey:NSStringFromClass(deleagte.class)];
+        [_hookTableClassesCache setObject:@"1" forKey:NSStringFromClass(deleagte.class)];
     }
     
 }

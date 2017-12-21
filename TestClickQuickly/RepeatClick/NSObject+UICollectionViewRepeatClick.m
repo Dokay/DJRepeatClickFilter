@@ -13,9 +13,9 @@
 
 #if DJ_REPEAT_CLICK_MACROS == DJ_REPEAT_CLICK_OPEN
 
-static NSMutableDictionary *hookCollectionClassesCache;
+static NSMutableDictionary *_hookCollectionClassesCache;
 
-@implementation UICollectionView (RepeatClick)
+@implementation NSObject (UICollectionViewRepeatClick)
 
 + (void)load
 {
@@ -32,15 +32,15 @@ static NSMutableDictionary *hookCollectionClassesCache;
 {
     [self dj_repeatClickSetCollectionDelegate:deleagte];
     
-    if (hookCollectionClassesCache == nil) {
-        hookCollectionClassesCache = [NSMutableDictionary new];
+    if (_hookCollectionClassesCache == nil) {
+        _hookCollectionClassesCache = [NSMutableDictionary new];
     }
-    if (deleagte != nil && [hookCollectionClassesCache objectForKey:NSStringFromClass(deleagte.class)] == nil) {
+    if (deleagte != nil && [_hookCollectionClassesCache objectForKey:NSStringFromClass(deleagte.class)] == nil) {
         BOOL addMethodResult = DJ_addSwizzleMethod(deleagte.class,@selector(dj_repeatClickCollectionView:didSelectItemAtIndexPath:));
         NSAssert(addMethodResult, @"add method fail..");
         
         DJ_methodSwizzle(deleagte.class, @selector(collectionView:didSelectItemAtIndexPath:), @selector(dj_repeatClickCollectionView:didSelectItemAtIndexPath:), YES);
-        [hookCollectionClassesCache setObject:@"1" forKey:NSStringFromClass(deleagte.class)];
+        [_hookCollectionClassesCache setObject:@"1" forKey:NSStringFromClass(deleagte.class)];
     }
     
 }

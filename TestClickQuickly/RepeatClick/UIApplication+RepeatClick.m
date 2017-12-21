@@ -13,8 +13,8 @@
 
 #if DJ_REPEAT_CLICK_MACROS == DJ_REPEAT_CLICK_OPEN
 
-static NSTimeInterval commonTimestamp;
-static NSTimeInterval tapProcessingTimestamp;
+static NSTimeInterval _commonTimestamp;
+static NSTimeInterval _tapProcessingTimestamp;
 
 @implementation UIApplication (RepeatClick)
 
@@ -30,18 +30,18 @@ static NSTimeInterval tapProcessingTimestamp;
 
 + (void)setProcessingToCommon
 {
-    tapProcessingTimestamp = commonTimestamp;
+    _tapProcessingTimestamp = _commonTimestamp;
 }
 
 + (BOOL)isCommonEqual
 {
-    return tapProcessingTimestamp == commonTimestamp;
+    return _tapProcessingTimestamp == _commonTimestamp;
 }
 
 -(void)dj_repeatClickSendEvent:(UIEvent *)event
 {
     if (event.type == UIEventTypeTouches) {
-        commonTimestamp = event.timestamp;
+        _commonTimestamp = event.timestamp;
     }
     
     [self dj_repeatClickSendEvent:event];

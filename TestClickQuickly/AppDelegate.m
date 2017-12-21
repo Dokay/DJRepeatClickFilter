@@ -27,7 +27,7 @@
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     self.window.rootViewController = nav;
     [self.window makeKeyAndVisible];
-    
+    [DJRepeatClickHelper setFilterOpen:NO];
     [DJRepeatClickHelper setOtherFilter:^BOOL{
         //other conditions you want to filter
         return YES;

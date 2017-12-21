@@ -14,7 +14,7 @@
 
 #if DJ_REPEAT_CLICK_MACROS == DJ_REPEAT_CLICK_OPEN
 
-static NSMutableDictionary *hookGestureSelectorCache;
+static NSMutableDictionary *_hookGestureSelectorCache;
 static const NSString *DJ_REPEAT_CLICK_GESTURE_PRE = @"DJ_REPEAT_CLICK_GESTURE_PRE";
 static const NSString *DJ_REPEAT_CLICK_GESTURE_FORK_PRE = @"DJ_REPEAT_CLICK_GESTURE_FORK_PRE";
 
@@ -81,11 +81,11 @@ static const NSString *DJ_REPEAT_CLICK_GESTURE_FORK_PRE = @"DJ_REPEAT_CLICK_GEST
     
     NSString *selectorKeyWithTargetClass = dj_gesture_selector_name(target.class,action);
     
-    if (!hookGestureSelectorCache) {
-        hookGestureSelectorCache = [NSMutableDictionary new];
+    if (!_hookGestureSelectorCache) {
+        _hookGestureSelectorCache = [NSMutableDictionary new];
     }
     
-    if ([hookGestureSelectorCache valueForKey:selectorKeyWithTargetClass]) {
+    if ([_hookGestureSelectorCache valueForKey:selectorKeyWithTargetClass]) {
         return;
     }
     
@@ -97,7 +97,7 @@ static const NSString *DJ_REPEAT_CLICK_GESTURE_FORK_PRE = @"DJ_REPEAT_CLICK_GEST
     NSAssert(addMethodResult, @"add method：%@ fail..",selectorKeyWithTargetClass);
     
     DJ_methodSwizzle(target.class, action, NSSelectorFromString(selectorKeyWithTargetClass), YES);
-    [hookGestureSelectorCache setObject:@"1" forKey:selectorKeyWithTargetClass];
+    [_hookGestureSelectorCache setObject:@"1" forKey:selectorKeyWithTargetClass];
 }
 
 static void dj_gesture_imp(NSObject *target, SEL action, id newValue)

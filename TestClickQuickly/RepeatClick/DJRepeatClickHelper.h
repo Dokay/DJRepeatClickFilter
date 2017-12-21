@@ -16,7 +16,7 @@
 
 #if DJ_REPEAT_CLICK_MACROS == DJ_REPEAT_CLICK_OPEN
 
-typedef BOOL (^DJRepeatClickOtherFilterBlock)();
+typedef BOOL (^DJRepeatClickOtherFilterBlock)(void);
 
 @interface DJRepeatClickHelper : NSObject
 
@@ -24,7 +24,7 @@ typedef BOOL (^DJRepeatClickOtherFilterBlock)();
 + (void)setFilterOpen:(BOOL)isFilterOpen;
 
 /**
- 设置当前Runloop 点击无效，当前Runloop结束时开关会自动放开，可多次重复调用
+ can not invoke tap actions in current runloop.
  */
 + (void)setTapDisable;
 
