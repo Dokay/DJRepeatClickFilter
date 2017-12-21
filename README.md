@@ -34,17 +34,21 @@ pod 'DJRepeatClickFilter'
 ```
 
 ## Quickstart
-	1. Disable DJRepeatClickHelper
-	DJRepeatClickFilter is opened default.To disable it:
+
+DJRepeatClickFilter is opened default.To disable it:
+	
 	```objc
 	[DJRepeatClickHelper setFilterOpen:NO];
 	```
-	2. Set other filter logic:
+	
+Set other filter logic:
+	
 	```objc
 	[DJRepeatClickHelper setOtherFilter:^BOOL{
 	        //other conditions you want to filter
 	        return YES;
 	    }];
+		
 	```
 
 ## Contact
