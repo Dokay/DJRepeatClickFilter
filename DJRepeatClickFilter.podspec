@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'DJRepeatClickFilter'
-  s.version          = '0.1.0'
+  s.version          = '0.2.0'
   s.summary          = 'DJRepeatClickFilter is a tool to void strange questions while tap quickly.'
 
   s.description      = <<-DESC
