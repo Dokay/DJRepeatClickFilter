@@ -10,7 +10,7 @@
 #import "ViewController.h"
 #import "DJRepeatClickHelper.h"
 
-//BOOL DJRepeatClickFilterEnable = YES;
+//BOOL DJrepeatClickFilterDisable = YES;
 
 @interface AppDelegate ()<UINavigationControllerDelegate>
 

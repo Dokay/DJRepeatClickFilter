@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4E3D1D322024BA2400D6BBE2 /* DJRepeatClickFilter.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 4E3D1D312024BA2400D6BBE2 /* DJRepeatClickFilter.podspec */; };
+		4E3D1D352024BC8000D6BBE2 /* NSObject+DJRepeatClickAddition.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E3D1D342024BC8000D6BBE2 /* NSObject+DJRepeatClickAddition.m */; };
 		4E4B77901FEA6B0E0079EC70 /* DJRepeatClickHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E4B77851FEA6B0D0079EC70 /* DJRepeatClickHelper.m */; };
 		4E4B77911FEA6B0E0079EC70 /* NSObject+UICollectionViewRepeatClick.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E4B77871FEA6B0D0079EC70 /* NSObject+UICollectionViewRepeatClick.m */; };
 		4E4B77921FEA6B0E0079EC70 /* NSObject+UITableViewRepeatClick.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E4B77891FEA6B0D0079EC70 /* NSObject+UITableViewRepeatClick.m */; };
@@ -23,6 +24,8 @@
 
 /* Begin PBXFileReference section */
 		4E3D1D312024BA2400D6BBE2 /* DJRepeatClickFilter.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = DJRepeatClickFilter.podspec; sourceTree = "<group>"; };
+		4E3D1D332024BC8000D6BBE2 /* NSObject+DJRepeatClickAddition.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSObject+DJRepeatClickAddition.h"; sourceTree = "<group>"; };
+		4E3D1D342024BC8000D6BBE2 /* NSObject+DJRepeatClickAddition.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSObject+DJRepeatClickAddition.m"; sourceTree = "<group>"; };
 		4E4B77841FEA6B0D0079EC70 /* DJRepeatClickHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DJRepeatClickHelper.h; sourceTree = "<group>"; };
 		4E4B77851FEA6B0D0079EC70 /* DJRepeatClickHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DJRepeatClickHelper.m; sourceTree = "<group>"; };
 		4E4B77861FEA6B0D0079EC70 /* NSObject+UICollectionViewRepeatClick.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+UICollectionViewRepeatClick.h"; sourceTree = "<group>"; };
@@ -74,6 +77,8 @@
 				4E4B778D1FEA6B0D0079EC70 /* UIControl+DJRepeatClick.m */,
 				4E4B778E1FEA6B0D0079EC70 /* UIGestureRecognizer+DJRepeatClick.h */,
 				4E4B778F1FEA6B0D0079EC70 /* UIGestureRecognizer+DJRepeatClick.m */,
+				4E3D1D332024BC8000D6BBE2 /* NSObject+DJRepeatClickAddition.h */,
+				4E3D1D342024BC8000D6BBE2 /* NSObject+DJRepeatClickAddition.m */,
 			);
 			path = RepeatClick;
 			sourceTree = "<group>";
@@ -197,6 +202,7 @@
 				4EC9343A1F7A226C00E22A8E /* AppDelegate.m in Sources */,
 				4E4B77941FEA6B0E0079EC70 /* UIControl+DJRepeatClick.m in Sources */,
 				4EC934371F7A226C00E22A8E /* main.m in Sources */,
+				4E3D1D352024BC8000D6BBE2 /* NSObject+DJRepeatClickAddition.m in Sources */,
 				4E4B77911FEA6B0E0079EC70 /* NSObject+UICollectionViewRepeatClick.m in Sources */,
 				4E4B77901FEA6B0E0079EC70 /* DJRepeatClickHelper.m in Sources */,
 			);

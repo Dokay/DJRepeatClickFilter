@@ -7,6 +7,7 @@
 //
 
 #import "NSObject+UITableViewRepeatClick.h"
+#import "NSObject+DJRepeatClickAddition.h"
 #import "DJMethodSwizzleMacro.h"
 #import "DJRepeatClickHelper.h"
 
@@ -46,6 +47,11 @@ static NSMutableDictionary *_hookTableClassesCache;
 
 - (void)dj_repeat_tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (self.repeatClickFilterDisable) {
+        [self dj_repeat_tableView:tableView didSelectRowAtIndexPath:indexPath];
+        return;
+    }
+    
     if ([DJRepeatClickHelper tapEnable]) {
         [DJRepeatClickHelper setTapDisable];
         [self dj_repeat_tableView:tableView didSelectRowAtIndexPath:indexPath];

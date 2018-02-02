@@ -8,6 +8,7 @@
 
 #import "UIControl+DJRepeatClick.h"
 #import "UIApplication+DJRepeatClick.h"
+#import "NSObject+DJRepeatClickAddition.h"
 #import "DJMethodSwizzleMacro.h"
 #import "DJRepeatClickHelper.h"
 
@@ -34,6 +35,11 @@ NS_INLINE BOOL dj_RepeatClickGestureAndActionOneTapMultipleSelectorInvokeEnable(
 #pragma mark - UIControl Hook
 - (void)dj_repeatClickSendAction:(SEL)action to:(id)target forEvent:(UIEvent *)event
 {
+    if (self.repeatClickFilterDisable) {
+        [self dj_repeatClickSendAction:action to:target forEvent:event];
+        return;
+    }
+    
     if (event == nil) {
         //UITextInput replaceRange:withText: will call
         [self dj_repeatClickSendAction:action to:target forEvent:event];

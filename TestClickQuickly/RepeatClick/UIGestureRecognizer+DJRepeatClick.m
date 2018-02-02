@@ -8,9 +8,9 @@
 
 #import "UIGestureRecognizer+DJRepeatClick.h"
 #import "DJMethodSwizzleMacro.h"
-
 #import "DJRepeatClickHelper.h"
 #import "UIApplication+DJRepeatClick.h"
+#import "NSObject+DJRepeatClickAddition.h"
 
 #if DJ_REPEAT_CLICK_MACROS == DJ_REPEAT_CLICK_OPEN
 
@@ -128,6 +128,10 @@ static const NSString *DJ_REPEAT_CLICK_GESTURE_FORK_PRE = @"DJ_REPEAT_CLICK_GEST
 static void dj_gesture_imp(NSObject *target, SEL action, id newValue)
 {
     UIGestureRecognizer *recognizer = newValue;
+    if (recognizer.repeatClickFilterDisable) {
+        dj_gesture_invoke(target,action,newValue);
+        return;
+    }
     
     //UIScreenEdgePanGestureRecognizer add here for pan gesture may change navigation stack also.ex->pop
     if ([recognizer isMemberOfClass:UITapGestureRecognizer.class]
@@ -150,7 +154,6 @@ NS_INLINE NSString *dj_gesture_selector_name(Class targetClass, SEL action)
     NSString *selectorKeyWithTargetClass = [NSString stringWithFormat:@"%@_%@_%@",DJ_REPEAT_CLICK_GESTURE_PRE,NSStringFromClass(targetClass),NSStringFromSelector(action)];
     return selectorKeyWithTargetClass;
 }
-
 
 /**
  get original IMP and invoke

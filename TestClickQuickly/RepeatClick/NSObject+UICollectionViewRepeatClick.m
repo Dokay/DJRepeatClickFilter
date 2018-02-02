@@ -7,9 +7,9 @@
 //
 
 #import "NSObject+UICollectionViewRepeatClick.h"
+#import "NSObject+DJRepeatClickAddition.h"
 #import "DJMethodSwizzleMacro.h"
 #import "DJRepeatClickHelper.h"
-
 
 #if DJ_REPEAT_CLICK_MACROS == DJ_REPEAT_CLICK_OPEN
 
@@ -47,6 +47,11 @@ static NSMutableDictionary *_hookCollectionClassesCache;
 
 - (void)dj_repeatClickCollectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (self.repeatClickFilterDisable) {
+        [self dj_repeatClickCollectionView:collectionView didSelectItemAtIndexPath:indexPath];
+        return;
+    }
+    
     if ([DJRepeatClickHelper tapEnable]) {
         [DJRepeatClickHelper setTapDisable];
         [self dj_repeatClickCollectionView:collectionView didSelectItemAtIndexPath:indexPath];
