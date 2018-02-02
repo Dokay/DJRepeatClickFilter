@@ -20,16 +20,44 @@ typedef BOOL (^DJRepeatClickOtherFilterBlock)(void);
 
 @interface DJRepeatClickHelper : NSObject
 
+/**
+ whether tap event filter is open.
+
+ @return YES means Open,otherwise NO.
+ */
 + (BOOL)isFilterOpen;
+
+/**
+ set current filter open or not.
+
+ @param isFilterOpen filter open or not.
+ */
 + (void)setFilterOpen:(BOOL)isFilterOpen;
 
 /**
- can not invoke tap actions in current runloop.
+ set state can not invoke tap actions in current runloop.
  */
 + (void)setTapDisable;
 
+/**
+ whether tap enbale in current runloop.
+
+ @return YES can tap,otherwise NO.
+ */
 + (BOOL)tapEnable;
+
+/**
+ other condition check result, is result for DJRepeatClickOtherFilterBlock.
+
+ @return YES conditon is OK,otherwise NO.
+ */
 + (BOOL)otherConditionCheck;
+
+/**
+ set other condition filter block
+
+ @param otherFilter filer block
+ */
 + (void)setOtherFilter:(DJRepeatClickOtherFilterBlock)otherFilter;
 
 

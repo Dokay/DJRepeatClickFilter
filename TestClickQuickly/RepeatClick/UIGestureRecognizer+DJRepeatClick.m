@@ -1,16 +1,16 @@
 //
-//  UIGestureRecognizer+RepeatClick.m
+//  UIGestureRecognizer+DJRepeatClick.m
 //  TestClickQuickly
 //
 //  Created by Dokay on 2017/9/25.
 //
 //
 
-#import "UIGestureRecognizer+RepeatClick.h"
+#import "UIGestureRecognizer+DJRepeatClick.h"
 #import "DJMethodSwizzleMacro.h"
 
 #import "DJRepeatClickHelper.h"
-#import "UIApplication+RepeatClick.h"
+#import "UIApplication+DJRepeatClick.h"
 
 #if DJ_REPEAT_CLICK_MACROS == DJ_REPEAT_CLICK_OPEN
 
@@ -18,7 +18,7 @@ static NSMutableDictionary *_hookGestureSelectorCache;
 static const NSString *DJ_REPEAT_CLICK_GESTURE_PRE = @"DJ_REPEAT_CLICK_GESTURE_PRE";
 static const NSString *DJ_REPEAT_CLICK_GESTURE_FORK_PRE = @"DJ_REPEAT_CLICK_GESTURE_FORK_PRE";
 
-@implementation UIGestureRecognizer (RepeatClick)
+@implementation UIGestureRecognizer (DJRepeatClick)
 
 + (void)load
 {
@@ -37,6 +37,7 @@ static const NSString *DJ_REPEAT_CLICK_GESTURE_FORK_PRE = @"DJ_REPEAT_CLICK_GEST
     SEL forkAction = [self repeatClickForkActionWithTarget:target action:action];
     
     [self dj_repeatClickHookGestureWithTarget:target action:forkAction];
+    //avoid action may be called by other custom method that not by system event, fork action
     return [self dj_repeatClickInitWithTarget:target action:forkAction];
 }
 
@@ -48,29 +49,46 @@ static const NSString *DJ_REPEAT_CLICK_GESTURE_FORK_PRE = @"DJ_REPEAT_CLICK_GEST
     [self dj_repeatClickAddTarget:target action:forkAction];
 }
 
+
+/**
+ fork selector and add the forked selector into target class
+ format for selector name is DJ_REPEAT_CLICK_GESTURE_FORK_PRE_#actionName:
+ 
+ @param target original target to add fork selector
+ @param action original selector
+ @return selector forked
+ */
 - (SEL)repeatClickForkActionWithTarget:(NSObject *)target action:(SEL)action
 {
     SEL forkAction = action;
     if ([self isMemberOfClass:UITapGestureRecognizer.class]
         || [self isMemberOfClass:UIScreenEdgePanGestureRecognizer.class]) {
         NSString *actionName = NSStringFromSelector(action);
-        NSMutableString *formActionName = [[NSMutableString alloc] initWithFormat:@"%@",DJ_REPEAT_CLICK_GESTURE_FORK_PRE];
-        [formActionName appendString:@"_"];
-        [formActionName appendString:actionName];
-        if (![formActionName hasSuffix:@":"]) {
-            [formActionName appendString:@":"];
+        NSMutableString *forkActionName = [[NSMutableString alloc] initWithFormat:@"%@",DJ_REPEAT_CLICK_GESTURE_FORK_PRE];
+        [forkActionName appendString:@"_"];
+        [forkActionName appendString:actionName];
+        if (![forkActionName hasSuffix:@":"]) {
+            [forkActionName appendString:@":"];
         }
         
-        forkAction = NSSelectorFromString(formActionName.copy);
+        forkAction = NSSelectorFromString(forkActionName.copy);
         IMP targetIMP = (IMP)class_getMethodImplementation(target.class, action);
         class_addMethod(target.class, forkAction, targetIMP, method_getTypeEncoding(class_getInstanceMethod([target class], action)));
     }
     return forkAction;
 }
 
-- (void)dj_repeatClickHookGestureWithTarget:(NSObject *)target action:(SEL)action
+
+/**
+ add custom selector and IMP to target and swizzle with fork action
+ format for custom selector is DJ_REPEAT_CLICK_GESTURE_PRE_#targetClassName_#forkSelectorName
+
+ @param target original target
+ @param forkAction fork action
+ */
+- (void)dj_repeatClickHookGestureWithTarget:(NSObject *)target action:(SEL)forkAction
 {
-    if (!target ||! action) {
+    if (!target ||! forkAction) {
         return;
     }
     
@@ -79,36 +97,44 @@ static const NSString *DJ_REPEAT_CLICK_GESTURE_FORK_PRE = @"DJ_REPEAT_CLICK_GEST
         return;
     }
     
-    NSString *selectorKeyWithTargetClass = dj_gesture_selector_name(target.class,action);
-    
     if (!_hookGestureSelectorCache) {
         _hookGestureSelectorCache = [NSMutableDictionary new];
     }
     
+    NSString *selectorKeyWithTargetClass = dj_gesture_selector_name(target.class,forkAction);
     if ([_hookGestureSelectorCache valueForKey:selectorKeyWithTargetClass]) {
         return;
     }
     
-    Method setterMethod = class_getInstanceMethod([target class], action);
-    NSAssert(setterMethod != NULL, @"no selector:",selectorKeyWithTargetClass);
+    Method originalMethod = class_getInstanceMethod([target class], forkAction);
+    NSAssert(originalMethod != NULL, @"no selector:",selectorKeyWithTargetClass);
     
-    BOOL addMethodResult = class_addMethod(target.class, NSSelectorFromString(selectorKeyWithTargetClass), (IMP)dj_gesture_imp, method_getTypeEncoding(setterMethod));
-    
+    BOOL addMethodResult = class_addMethod(target.class, NSSelectorFromString(selectorKeyWithTargetClass), (IMP)dj_gesture_imp, method_getTypeEncoding(originalMethod));
     NSAssert(addMethodResult, @"add method：%@ fail..",selectorKeyWithTargetClass);
     
-    DJ_methodSwizzle(target.class, action, NSSelectorFromString(selectorKeyWithTargetClass), YES);
+    DJ_methodSwizzle(target.class, forkAction, NSSelectorFromString(selectorKeyWithTargetClass), YES);
+    
     [_hookGestureSelectorCache setObject:@"1" forKey:selectorKeyWithTargetClass];
 }
 
+
+/**
+ custom IMP to do really action, all user tap gestures will call this method.
+
+ @param target original target
+ @param action fork selector
+ @param newValue UITapGestureRecognizer param
+ */
 static void dj_gesture_imp(NSObject *target, SEL action, id newValue)
 {
     UIGestureRecognizer *recognizer = newValue;
     
+    //UIScreenEdgePanGestureRecognizer add here for pan gesture may change navigation stack also.ex->pop
     if ([recognizer isMemberOfClass:UITapGestureRecognizer.class]
         || ([recognizer isMemberOfClass:UIScreenEdgePanGestureRecognizer.class] && recognizer.state == UIGestureRecognizerStateBegan)) {
         if ([DJRepeatClickHelper tapEnable]) {
             [DJRepeatClickHelper setTapDisable];
-            [UIApplication setProcessingToCommon];
+            [UIApplication setIsProcessingForCurrentTimestap];
             
             dj_gesture_invoke(target,action,newValue);
         }else if(dj_RepeatClickGestureAndActionOneTapMultipleSelectorInvokeEnable()){
@@ -125,11 +151,18 @@ NS_INLINE NSString *dj_gesture_selector_name(Class targetClass, SEL action)
     return selectorKeyWithTargetClass;
 }
 
+
+/**
+ get original IMP and invoke
+
+ @param target original target
+ @param action fork selector
+ @param newValue UITapGestureRecognizer param
+ */
 NS_INLINE void dj_gesture_invoke(NSObject *target, SEL action, id newValue)
 {
     NSString *selectorKeyWithTargetClass = dj_gesture_selector_name(target.class,action);
     IMP originalImplementation = class_getMethodImplementation([target class], NSSelectorFromString(selectorKeyWithTargetClass));
-//    NSAssert(originalImplementation != NULL,@"no imp,%@",selectorKeyWithTargetClass);
     assert(originalImplementation != NULL);
     
     typedef void (*OriginalMethodType)(id,SEL, NSObject*);
@@ -139,7 +172,7 @@ NS_INLINE void dj_gesture_invoke(NSObject *target, SEL action, id newValue)
 
 NS_INLINE BOOL dj_RepeatClickGestureAndActionOneTapMultipleSelectorInvokeEnable()
 {
-    return [UIApplication isCommonEqual] && [DJRepeatClickHelper otherConditionCheck];
+    return [UIApplication isSameTap] && [DJRepeatClickHelper otherConditionCheck];
 }
 
 @end

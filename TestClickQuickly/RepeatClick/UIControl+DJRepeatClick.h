@@ -1,5 +1,5 @@
 //
-//  UIApplication+RepeatClick.h
+//  UIControl+DJRepeatClick.h
 //  TestClickQuickly
 //
 //  Created by Dokay on 2017/9/25.
@@ -10,10 +10,7 @@
 
 #if DJ_REPEAT_CLICK_MACROS == DJ_REPEAT_CLICK_OPEN
 
-@interface UIApplication (RepeatClick)
-
-+ (void)setProcessingToCommon;
-+ (BOOL)isCommonEqual;
+@interface UIControl (DJRepeatClick)
 
 @end
 

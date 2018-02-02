@@ -77,7 +77,7 @@ static DJRepeatClickOtherFilterBlock _otherRepeatClickFilter;
     };
     
     CFRunLoopObserverRef observer = CFRunLoopObserverCreateWithHandler(kCFAllocatorDefault,
-                                                                       kCFRunLoopBeforeWaiting|kCFRunLoopExit,
+                                                                       kCFRunLoopBeforeWaiting | kCFRunLoopExit,
                                                                        true,
                                                                        INT_MAX-1,
                                                                        runLoopObserverCallback);

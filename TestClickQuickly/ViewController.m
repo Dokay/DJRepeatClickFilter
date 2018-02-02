@@ -63,7 +63,7 @@
     NSLog(@"after push");
 }
 
-//慢速点击：
+//slow tap：
 //2017-09-25 21:07:55.072 TestClickQuickly[96730:3606493] activity:32
 //2017-09-25 21:07:55.201 TestClickQuickly[96730:3606493] push
 //2017-09-25 21:07:55.202 TestClickQuickly[96730:3606493] after push
@@ -84,7 +84,7 @@
 //2017-09-25 14:10:00.001 TestClickQuickly[96730:3606493] activity:32
 //2017-09-25 14:11:00.001 TestClickQuickly[96730:3606493] activity:32
 
-//快速点击：
+//quick tap：
 //2017-09-25 21:06:07.979 TestClickQuickly[96730:3606493] activity:32
 //2017-09-25 21:06:08.012 TestClickQuickly[96730:3606493] push
 //2017-09-25 21:06:08.013 TestClickQuickly[96730:3606493] after push

@@ -7,12 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4E3D1D322024BA2400D6BBE2 /* DJRepeatClickFilter.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 4E3D1D312024BA2400D6BBE2 /* DJRepeatClickFilter.podspec */; };
 		4E4B77901FEA6B0E0079EC70 /* DJRepeatClickHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E4B77851FEA6B0D0079EC70 /* DJRepeatClickHelper.m */; };
 		4E4B77911FEA6B0E0079EC70 /* NSObject+UICollectionViewRepeatClick.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E4B77871FEA6B0D0079EC70 /* NSObject+UICollectionViewRepeatClick.m */; };
 		4E4B77921FEA6B0E0079EC70 /* NSObject+UITableViewRepeatClick.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E4B77891FEA6B0D0079EC70 /* NSObject+UITableViewRepeatClick.m */; };
-		4E4B77931FEA6B0E0079EC70 /* UIApplication+RepeatClick.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E4B778B1FEA6B0D0079EC70 /* UIApplication+RepeatClick.m */; };
-		4E4B77941FEA6B0E0079EC70 /* UIControl+RepeatClick.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E4B778D1FEA6B0D0079EC70 /* UIControl+RepeatClick.m */; };
-		4E4B77951FEA6B0E0079EC70 /* UIGestureRecognizer+RepeatClick.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E4B778F1FEA6B0D0079EC70 /* UIGestureRecognizer+RepeatClick.m */; };
+		4E4B77931FEA6B0E0079EC70 /* UIApplication+DJRepeatClick.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E4B778B1FEA6B0D0079EC70 /* UIApplication+DJRepeatClick.m */; };
+		4E4B77941FEA6B0E0079EC70 /* UIControl+DJRepeatClick.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E4B778D1FEA6B0D0079EC70 /* UIControl+DJRepeatClick.m */; };
+		4E4B77951FEA6B0E0079EC70 /* UIGestureRecognizer+DJRepeatClick.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E4B778F1FEA6B0D0079EC70 /* UIGestureRecognizer+DJRepeatClick.m */; };
 		4EC934371F7A226C00E22A8E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EC934361F7A226C00E22A8E /* main.m */; };
 		4EC9343A1F7A226C00E22A8E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EC934391F7A226C00E22A8E /* AppDelegate.m */; };
 		4EC9343D1F7A226C00E22A8E /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EC9343C1F7A226C00E22A8E /* ViewController.m */; };
@@ -21,18 +22,19 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4E3D1D312024BA2400D6BBE2 /* DJRepeatClickFilter.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = DJRepeatClickFilter.podspec; sourceTree = "<group>"; };
 		4E4B77841FEA6B0D0079EC70 /* DJRepeatClickHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DJRepeatClickHelper.h; sourceTree = "<group>"; };
 		4E4B77851FEA6B0D0079EC70 /* DJRepeatClickHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DJRepeatClickHelper.m; sourceTree = "<group>"; };
 		4E4B77861FEA6B0D0079EC70 /* NSObject+UICollectionViewRepeatClick.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+UICollectionViewRepeatClick.h"; sourceTree = "<group>"; };
 		4E4B77871FEA6B0D0079EC70 /* NSObject+UICollectionViewRepeatClick.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+UICollectionViewRepeatClick.m"; sourceTree = "<group>"; };
 		4E4B77881FEA6B0D0079EC70 /* NSObject+UITableViewRepeatClick.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+UITableViewRepeatClick.h"; sourceTree = "<group>"; };
 		4E4B77891FEA6B0D0079EC70 /* NSObject+UITableViewRepeatClick.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+UITableViewRepeatClick.m"; sourceTree = "<group>"; };
-		4E4B778A1FEA6B0D0079EC70 /* UIApplication+RepeatClick.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIApplication+RepeatClick.h"; sourceTree = "<group>"; };
-		4E4B778B1FEA6B0D0079EC70 /* UIApplication+RepeatClick.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+RepeatClick.m"; sourceTree = "<group>"; };
-		4E4B778C1FEA6B0D0079EC70 /* UIControl+RepeatClick.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIControl+RepeatClick.h"; sourceTree = "<group>"; };
-		4E4B778D1FEA6B0D0079EC70 /* UIControl+RepeatClick.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIControl+RepeatClick.m"; sourceTree = "<group>"; };
-		4E4B778E1FEA6B0D0079EC70 /* UIGestureRecognizer+RepeatClick.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIGestureRecognizer+RepeatClick.h"; sourceTree = "<group>"; };
-		4E4B778F1FEA6B0D0079EC70 /* UIGestureRecognizer+RepeatClick.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIGestureRecognizer+RepeatClick.m"; sourceTree = "<group>"; };
+		4E4B778A1FEA6B0D0079EC70 /* UIApplication+DJRepeatClick.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIApplication+DJRepeatClick.h"; sourceTree = "<group>"; };
+		4E4B778B1FEA6B0D0079EC70 /* UIApplication+DJRepeatClick.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+DJRepeatClick.m"; sourceTree = "<group>"; };
+		4E4B778C1FEA6B0D0079EC70 /* UIControl+DJRepeatClick.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIControl+DJRepeatClick.h"; sourceTree = "<group>"; };
+		4E4B778D1FEA6B0D0079EC70 /* UIControl+DJRepeatClick.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIControl+DJRepeatClick.m"; sourceTree = "<group>"; };
+		4E4B778E1FEA6B0D0079EC70 /* UIGestureRecognizer+DJRepeatClick.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIGestureRecognizer+DJRepeatClick.h"; sourceTree = "<group>"; };
+		4E4B778F1FEA6B0D0079EC70 /* UIGestureRecognizer+DJRepeatClick.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIGestureRecognizer+DJRepeatClick.m"; sourceTree = "<group>"; };
 		4E4B77961FEA6BAA0079EC70 /* DJMethodSwizzleMacro.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DJMethodSwizzleMacro.h; sourceTree = "<group>"; };
 		4EC934321F7A226C00E22A8E /* TestClickQuickly.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestClickQuickly.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4EC934361F7A226C00E22A8E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -66,12 +68,12 @@
 				4E4B77871FEA6B0D0079EC70 /* NSObject+UICollectionViewRepeatClick.m */,
 				4E4B77881FEA6B0D0079EC70 /* NSObject+UITableViewRepeatClick.h */,
 				4E4B77891FEA6B0D0079EC70 /* NSObject+UITableViewRepeatClick.m */,
-				4E4B778A1FEA6B0D0079EC70 /* UIApplication+RepeatClick.h */,
-				4E4B778B1FEA6B0D0079EC70 /* UIApplication+RepeatClick.m */,
-				4E4B778C1FEA6B0D0079EC70 /* UIControl+RepeatClick.h */,
-				4E4B778D1FEA6B0D0079EC70 /* UIControl+RepeatClick.m */,
-				4E4B778E1FEA6B0D0079EC70 /* UIGestureRecognizer+RepeatClick.h */,
-				4E4B778F1FEA6B0D0079EC70 /* UIGestureRecognizer+RepeatClick.m */,
+				4E4B778A1FEA6B0D0079EC70 /* UIApplication+DJRepeatClick.h */,
+				4E4B778B1FEA6B0D0079EC70 /* UIApplication+DJRepeatClick.m */,
+				4E4B778C1FEA6B0D0079EC70 /* UIControl+DJRepeatClick.h */,
+				4E4B778D1FEA6B0D0079EC70 /* UIControl+DJRepeatClick.m */,
+				4E4B778E1FEA6B0D0079EC70 /* UIGestureRecognizer+DJRepeatClick.h */,
+				4E4B778F1FEA6B0D0079EC70 /* UIGestureRecognizer+DJRepeatClick.m */,
 			);
 			path = RepeatClick;
 			sourceTree = "<group>";
@@ -79,6 +81,7 @@
 		4EC934291F7A226C00E22A8E = {
 			isa = PBXGroup;
 			children = (
+				4E3D1D312024BA2400D6BBE2 /* DJRepeatClickFilter.podspec */,
 				4EC934341F7A226C00E22A8E /* TestClickQuickly */,
 				4EC934331F7A226C00E22A8E /* Products */,
 			);
@@ -147,8 +150,7 @@
 				TargetAttributes = {
 					4EC934311F7A226C00E22A8E = {
 						CreatedOnToolsVersion = 8.3.3;
-						DevelopmentTeam = 44P42PWM44;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 					};
 				};
 			};
@@ -175,6 +177,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4E3D1D322024BA2400D6BBE2 /* DJRepeatClickFilter.podspec in Resources */,
 				4EC934451F7A226C00E22A8E /* LaunchScreen.storyboard in Resources */,
 				4EC934421F7A226C00E22A8E /* Assets.xcassets in Resources */,
 			);
@@ -188,11 +191,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				4E4B77921FEA6B0E0079EC70 /* NSObject+UITableViewRepeatClick.m in Sources */,
-				4E4B77931FEA6B0E0079EC70 /* UIApplication+RepeatClick.m in Sources */,
-				4E4B77951FEA6B0E0079EC70 /* UIGestureRecognizer+RepeatClick.m in Sources */,
+				4E4B77931FEA6B0E0079EC70 /* UIApplication+DJRepeatClick.m in Sources */,
+				4E4B77951FEA6B0E0079EC70 /* UIGestureRecognizer+DJRepeatClick.m in Sources */,
 				4EC9343D1F7A226C00E22A8E /* ViewController.m in Sources */,
 				4EC9343A1F7A226C00E22A8E /* AppDelegate.m in Sources */,
-				4E4B77941FEA6B0E0079EC70 /* UIControl+RepeatClick.m in Sources */,
+				4E4B77941FEA6B0E0079EC70 /* UIControl+DJRepeatClick.m in Sources */,
 				4EC934371F7A226C00E22A8E /* main.m in Sources */,
 				4E4B77911FEA6B0E0079EC70 /* NSObject+UICollectionViewRepeatClick.m in Sources */,
 				4E4B77901FEA6B0E0079EC70 /* DJRepeatClickHelper.m in Sources */,
@@ -308,12 +311,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 44P42PWM44;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = TestClickQuickly/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.evergrande.eif.iOS.hengdajinfu;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dj226.TestClick;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
@@ -324,12 +327,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 44P42PWM44;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = TestClickQuickly/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.evergrande.eif.iOS.hengdajinfu;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dj226.TestClick;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 			};

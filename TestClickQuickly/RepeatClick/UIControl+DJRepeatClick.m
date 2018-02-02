@@ -1,20 +1,20 @@
 //
-//  UIControl+RepeatClick.m
+//  UIControl+DJRepeatClick.m
 //  TestClickQuickly
 //
 //  Created by Dokay on 2017/9/25.
 //
 //
 
-#import "UIControl+RepeatClick.h"
-#import "UIApplication+RepeatClick.h"
+#import "UIControl+DJRepeatClick.h"
+#import "UIApplication+DJRepeatClick.h"
 #import "DJMethodSwizzleMacro.h"
 #import "DJRepeatClickHelper.h"
 
 
 #if DJ_REPEAT_CLICK_MACROS == DJ_REPEAT_CLICK_OPEN
 
-@implementation UIControl (RepeatClick)
+@implementation UIControl (DJRepeatClick)
 
 + (void)load
 {
@@ -28,7 +28,7 @@
 
 NS_INLINE BOOL dj_RepeatClickGestureAndActionOneTapMultipleSelectorInvokeEnable()
 {
-    return [UIApplication isCommonEqual] && [DJRepeatClickHelper otherConditionCheck];
+    return [UIApplication isSameTap] && [DJRepeatClickHelper otherConditionCheck];
 }
 
 #pragma mark - UIControl Hook
@@ -42,7 +42,7 @@ NS_INLINE BOOL dj_RepeatClickGestureAndActionOneTapMultipleSelectorInvokeEnable(
     
     if ([DJRepeatClickHelper tapEnable]) {
         [DJRepeatClickHelper setTapDisable];
-        [UIApplication setProcessingToCommon];
+        [UIApplication setIsProcessingForCurrentTimestap];
         [self dj_repeatClickSendAction:action to:target forEvent:event];
     }else if(dj_RepeatClickGestureAndActionOneTapMultipleSelectorInvokeEnable()){
         [self dj_repeatClickSendAction:action to:target forEvent:event];

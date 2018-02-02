@@ -1,22 +1,22 @@
 //
-//  UIApplication+RepeatClick.m
+//  UIApplication+DJRepeatClick.m
 //  TestClickQuickly
 //
 //  Created by Dokay on 2017/9/25.
 //
 //
 
-#import "UIApplication+RepeatClick.h"
+#import "UIApplication+DJRepeatClick.h"
 #import "DJMethodSwizzleMacro.h"
 #import "DJRepeatClickHelper.h"
 
 
 #if DJ_REPEAT_CLICK_MACROS == DJ_REPEAT_CLICK_OPEN
 
-static NSTimeInterval _commonTimestamp;
+static NSTimeInterval _lastTimestamp;
 static NSTimeInterval _tapProcessingTimestamp;
 
-@implementation UIApplication (RepeatClick)
+@implementation UIApplication (DJRepeatClick)
 
 + (void)load
 {
@@ -28,20 +28,20 @@ static NSTimeInterval _tapProcessingTimestamp;
     });
 }
 
-+ (void)setProcessingToCommon
++ (void)setIsProcessingForCurrentTimestap
 {
-    _tapProcessingTimestamp = _commonTimestamp;
+    _tapProcessingTimestamp = _lastTimestamp;
 }
 
-+ (BOOL)isCommonEqual
++ (BOOL)isSameTap
 {
-    return _tapProcessingTimestamp == _commonTimestamp;
+    return _tapProcessingTimestamp == _lastTimestamp;
 }
 
 -(void)dj_repeatClickSendEvent:(UIEvent *)event
 {
     if (event.type == UIEventTypeTouches) {
-        _commonTimestamp = event.timestamp;
+        _lastTimestamp = event.timestamp;
     }
     
     [self dj_repeatClickSendEvent:event];
